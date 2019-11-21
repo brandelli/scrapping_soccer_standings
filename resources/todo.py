@@ -19,6 +19,10 @@ todos = [
     }
 ]
 
+class Todos(Resource):
+    def get(self):
+        return todos, 200
+
 class Todo(Resource):
     def get(self, id):
         for todo in todos:
