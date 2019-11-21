@@ -5,9 +5,20 @@ from flask_restful import Resource
 leagues = [
     {
         'id': 1,
-        'name' : 'Brasil',
-        'url': 'https://fbref.com/en/comps/24/Serie-A-Stats'
+        'country' : 'Brasil',
+        'url': 'https://fbref.com/pt/comps/24/Serie-A-Stats'
+    },
+    {
+        'id': 2,
+        'country' : 'Inglaterra',
+        'url': 'https://fbref.com/pt/comps/9/Premier-League-Stats'
+    },
+    {
+        'id': 3,
+        'country': 'Espanha',
+        'url': 'https://fbref.com/pt/comps/12/La-Liga-Stats'
     }
+
 ]
 
 class Leagues(Resource):
@@ -17,15 +28,16 @@ class Leagues(Resource):
 class League(Resource):
     def get(self, id):
         for league in leagues:
+            print(league.get('id'))
             if(id == league["id"]):
                 return league, 200
-            return "Item not found for the id: {}".format(id), 404
+        return "Item not found for the id: {}".format(id), 404
 
 class Standing(Resource):
     def get(self, id):
         for league in leagues:
             if(id == league["id"]):
-                url = "https://fbref.com/en/comps/24/Serie-A-Stats"
+                url = league.get('url')
                 page = requests.get(url, timeout=5)
                 page_content = bs(page.content, "html.parser")
                 table_wrapper = page_content.find('div', attrs={'class': 'table_outer_container'})
@@ -34,7 +46,7 @@ class Standing(Resource):
                     'table_rows': self.get_rows_data(table_wrapper)
                 }
                 return response, 200
-            return "Item not found for the id: {}".format(id), 404
+        return "Item not found for the id: {}".format(id), 404
     
     def get_head_data(self, table_wrapper):
         thead = table_wrapper.find('thead')
