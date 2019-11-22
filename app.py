@@ -1,14 +1,15 @@
+import os
+import pymongo
 from flask import Flask
 from flask_restful import Api
+from flask_cors import CORS
 
-from resources.todo import Todo, Todos
+
 from resources.soccer import Leagues, League, Standing
 
 app = Flask(__name__)
 api = Api(app)
-
-api.add_resource(Todo, "/todo/<int:id>")
-api.add_resource(Todos, "/todo/")
+CORS(app)
 
 api.add_resource(Leagues, "/leagues/")
 api.add_resource(League, "/leagues/<int:id>")
